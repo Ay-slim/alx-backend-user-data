@@ -34,7 +34,8 @@ def preauth() -> None:
     noauth = [
             '/api/v1/status/',
             '/api/v1/unauthorized/',
-            '/api/v1/forbidden/'
+            '/api/v1/forbidden/',
+            '/api/v1/auth_session/login/'
         ]
     if not auth.require_auth(request.path, noauth):
         return
