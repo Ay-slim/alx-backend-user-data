@@ -2,6 +2,7 @@
 """Auth routes and views"""
 import re
 from typing import List, TypeVar
+from os import getenv
 from flask import request
 
 
@@ -31,3 +32,10 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """ Returns None, will be the flask request object """
         return None
+
+    def session_cookie(self, request=None):
+        """ gets a cookie value from a request passed into the method"""
+        if request is None:
+            return None
+        session_name = getenv('SESSION_NAME')
+        return request.cookies.get(session_name)
