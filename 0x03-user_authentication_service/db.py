@@ -66,3 +66,20 @@ class DB:
         if not matching_user:
             raise NoResultFound
         return matching_user
+
+    def update_user(self, user_id: int, **kwargs: Mapping) -> None:
+        """
+        update_user - Update user with given values
+        """
+        matched_user = self.find_user_by(id=user_id)
+        if matched_user:
+            valid_keys = [
+                    'id', 'email',
+                    'hashed_password',
+                    'session_id', 'reset_token']
+            for key, val in kwargs.items():
+                if key not in valid_keys:
+                    raise ValueError
+                setattr(matched_user, key, val)
+        self._session.add(matched_user)
+        self._session.commit()
