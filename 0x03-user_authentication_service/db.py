@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """DB module
 """
+from typing import Mapping
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
@@ -45,3 +48,22 @@ class DB:
             self._session.rollback()
             new_user = None
         return new_user
+
+    def find_user_by(self, **kwargs: Mapping) -> User:
+        """
+        find_user_by - Find user by any attr
+        @kwargs: Variable collection of db properties
+        Returns: User who fits args
+        """
+        all_users = self._session.query(User)
+        if not all_users:
+            raise NoResultFound
+        if not kwargs:
+            raise InvalidRequestError
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise InvalidRequestError
+        matching_user = self._session.query(User).filter_by(**kwargs).first()
+        if not matching_user:
+            raise NoResultFound
+        return matching_user
