@@ -31,3 +31,11 @@ class Auth:
         except Exception:
             hashedpw = _hash_password(password)
             return self._db.add_user(email, hashedpw)
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """Return true if login details are valid and false otherwise"""
+        try:
+            user = self._db.find_user_by(email=email)
+        except Exception:
+            return False
+        return bcrypt.checkpw(password.encode('utf-8'), user.hashed_password)
