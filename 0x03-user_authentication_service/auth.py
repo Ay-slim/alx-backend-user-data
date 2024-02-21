@@ -7,6 +7,11 @@ from uuid import uuid4
 from db import DB
 
 
+def _generate_uuid() -> str:
+    """Generate a random uuid string"""
+    return str(uuid4())
+
+
 def _hash_password(password: str) -> bytes:
     """
     Returns the hashed version of a password
